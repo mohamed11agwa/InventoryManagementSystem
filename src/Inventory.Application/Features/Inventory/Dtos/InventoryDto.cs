@@ -4,8 +4,8 @@ public sealed record InventoryDto(Guid Id, Guid ProductId, Guid WarehouseId, int
 
 public sealed record StockAdjustmentDto(
     Guid Id,
-    Guid ProductId,
-    Guid WarehouseId,
+    string ProductName,
+    string WarehouseName,
     int QuantityChange,
     int PreviousQuantity,
     int NewQuantity,

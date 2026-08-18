@@ -4,6 +4,7 @@ namespace Inventory.Domain.Inventory;
 
 public sealed class StockAdjustment : Entity
 {
+    public Guid InventoryId { get; private set; }
     public int QuantityChange { get; private set; }
     public int PreviousQuantity { get; private set; }
     public int NewQuantity { get; private set; }
@@ -14,10 +15,11 @@ public sealed class StockAdjustment : Entity
     private StockAdjustment()
     { }
 
-    internal StockAdjustment(Guid id, int quantityChange, int previousQuantity, int newQuantity, DateTimeOffset adjustedAtUtc,
+    internal StockAdjustment(Guid id, Guid inventoryId, int quantityChange, int previousQuantity, int newQuantity, DateTimeOffset adjustedAtUtc,
         string adjustedBy,
         string reason) : base(id)
     {
+        InventoryId = inventoryId;
         QuantityChange = quantityChange;
         PreviousQuantity = previousQuantity;
         NewQuantity = newQuantity;

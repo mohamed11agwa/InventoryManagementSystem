@@ -18,11 +18,12 @@ public sealed class InventoryConfiguration : IEntityTypeConfiguration<Inventory.
         builder.Property(x => x.CreatedBy).HasMaxLength(450);
         builder.Property(x => x.LastModifiedBy).HasMaxLength(450);
 
-        builder.HasMany<StockAdjustment>("_adjustments")
+        builder.HasMany(x => x.Adjustments)
             .WithOne()
             .HasForeignKey(x => x.InventoryId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Navigation("_adjustments").UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(x => x.Adjustments)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

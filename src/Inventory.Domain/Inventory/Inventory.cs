@@ -67,7 +67,14 @@ public sealed class Inventory : AuditableEntity
             return InventoryErrors.InvalidQuantity;
         }
 
-        _adjustments.Add(new StockAdjustment(Guid.NewGuid(), quantityChange, Quantity, newQuantity, adjustedAtUtc,
+        _adjustments.Add(
+            new StockAdjustment(
+            Guid.NewGuid(),
+            Id,
+            quantityChange,
+            Quantity,
+            newQuantity,
+            adjustedAtUtc,
             adjustedBy.Trim(),
             reason.Trim()));
 
