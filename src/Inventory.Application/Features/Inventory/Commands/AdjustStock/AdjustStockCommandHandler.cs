@@ -18,8 +18,31 @@ public sealed class AdjustStockCommandHandler(IAppDbContext context, IUser user)
             return Error.Unauthorized("User.Unauthenticated", "An authenticated user is required.");
 
         var result = inventory.AdjustStock(command.QuantityChange, command.Reason, user.Id, DateTimeOffset.UtcNow);
-        if (result.IsError) return result.Errors;
-        await context.SaveChangesAsync(ct);
-        return inventory.ToDto();
+
+        if (result.IsError)
+            return result.Errors;
+
+        try
+        {
+            await context.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return Error.Conflict(
+                "Inventory.ConcurrencyConflict",
+                "The inventory was modified by another user. Please reload the current stock and try again.");
+        }
+
+        var productName = await context.Products
+    .Where(x => x.Id == inventory.ProductId)
+    .Select(x => x.Name)
+    .FirstAsync(ct);
+
+        var warehouseName = await context.Warehouses
+            .Where(x => x.Id == inventory.WarehouseId)
+            .Select(x => x.Name)
+            .FirstAsync(ct);
+
+        return inventory.ToDto(productName, warehouseName);
     }
 }

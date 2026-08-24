@@ -10,10 +10,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IValidator<TRequest>
     where TRequest : IRequest<TResponse>
     where TResponse : IResult
 {
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken ct)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         if (validator is null)
         {

@@ -42,6 +42,16 @@ public sealed class AddProductToWarehouseCommandHandler(IAppDbContext context)
 
         await context.SaveChangesAsync(ct);
 
-        return result.Value.ToDto();
+        var productName = await context.Products
+    .Where(x => x.Id == command.ProductId)
+    .Select(x => x.Name)
+    .FirstAsync(ct);
+
+        var warehouseName = await context.Warehouses
+            .Where(x => x.Id == command.WarehouseId)
+            .Select(x => x.Name)
+            .FirstAsync(ct);
+
+        return result.Value.ToDto(productName, warehouseName);
     }
 }

@@ -11,10 +11,10 @@ public sealed class IdentityService(UserManager<AppUser> userManager) : IIdentit
     {
         var user = await userManager.FindByEmailAsync(email);
         if (user is null)
-            return Error.Conflict("Identity.InvalidCredentials", "Email or password is incorrect.");
+            return Error.Unauthorized("Identity.InvalidCredentials", "Email or password is incorrect.");
 
         if (!user.EmailConfirmed || !await userManager.CheckPasswordAsync(user, password))
-            return Error.Conflict("Identity.InvalidCredentials", "Email or password is incorrect.");
+            return Error.Unauthorized("Identity.InvalidCredentials", "Email or password is incorrect.");
 
         return new AppUserDto(user.Id, user.Email!, await userManager.GetRolesAsync(user));
     }

@@ -1,4 +1,4 @@
-using Inventory.Api.Infrastructure;
+using Inventory.Api.Extensions;
 using Inventory.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);

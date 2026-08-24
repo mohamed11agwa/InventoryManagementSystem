@@ -1,42 +1,45 @@
 using Inventory.Application.Common.Interfaces;
 using Inventory.Application.Features.Inventory.Dtos;
+using Inventory.Application.Features.Inventory.Mappers;
 using Inventory.Application.Features.Inventory.Queries.GetRecentStockChanges;
 using Inventory.Domain.Common.Results;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-public sealed class GetRecentStockChangesQueryHandler(
-    IAppDbContext context,
-    IUserLookup userLookup)
-    : IRequestHandler<
-        GetRecentStockChangesQuery,
-        Result<List<StockAdjustmentDto>>>
+public sealed class GetRecentStockChangesQueryHandler(IAppDbContext context, IUserLookup userLookup) : IRequestHandler<GetRecentStockChangesQuery, Result<List<StockAdjustmentDto>>>
 {
-    public async Task<Result<List<StockAdjustmentDto>>> Handle(
-        GetRecentStockChangesQuery query,
-        CancellationToken ct)
+    public async Task<Result<List<StockAdjustmentDto>>> Handle(GetRecentStockChangesQuery query, CancellationToken ct)
     {
-        var adjustments = await context.StockAdjustments
-            .AsNoTracking()
+        var adjustments = await context.StockAdjustments.AsNoTracking()
             .Join(
                 context.Inventories,
-                a => a.InventoryId,
-                i => i.Id,
-                (a, i) => new { Adjustment = a, Inventory = i })
+                adjustment => adjustment.InventoryId,
+                inventory => inventory.Id,
+                (adjustment, inventory) => new
+                {
+                    Adjustment = adjustment,
+                    Inventory = inventory
+                })
             .Join(
                 context.Products,
                 x => x.Inventory.ProductId,
-                p => p.Id,
-                (x, p) => new { x.Adjustment, x.Inventory, Product = p })
+                product => product.Id,
+                (x, product) => new
+                {
+                    x.Adjustment,
+                    x.Inventory,
+                    Product = product
+                })
             .Join(
                 context.Warehouses,
                 x => x.Inventory.WarehouseId,
-                w => w.Id,
-                (x, w) => new
+                warehouse => warehouse.Id,
+                (x, warehouse) => new
                 {
                     x.Adjustment,
-                    ProductName = x.Product.Name,
-                    WarehouseName = w.Name
+                    x.Inventory,
+                    Product = x.Product,
+                    Warehouse = warehouse
                 })
             .OrderByDescending(x => x.Adjustment.AdjustedAtUtc)
             .Take(query.Count)
@@ -45,21 +48,15 @@ public sealed class GetRecentStockChangesQueryHandler(
         var userIds = adjustments
             .Select(x => x.Adjustment.AdjustedBy);
 
-        var userNames = await userLookup.GetUserNamesAsync(userIds, ct);
+        var userNames = await userLookup.GetUserNamesAsync(
+            userIds,
+            ct);
 
-        var result = adjustments.Select(x =>
-            new StockAdjustmentDto(
-                x.Adjustment.Id,
-                x.ProductName,
-                x.WarehouseName,
-                x.Adjustment.QuantityChange,
-                x.Adjustment.PreviousQuantity,
-                x.Adjustment.NewQuantity,
-                x.Adjustment.AdjustedAtUtc,
-                userNames.GetValueOrDefault(
-                    x.Adjustment.AdjustedBy,
-                    x.Adjustment.AdjustedBy),
-                x.Adjustment.Reason))
+        var result = adjustments
+            .Select(x => x.Adjustment.ToDto(
+                x.Product.Name,
+                x.Warehouse.Name,
+                userNames[x.Adjustment.AdjustedBy]))
             .ToList();
 
         return result;

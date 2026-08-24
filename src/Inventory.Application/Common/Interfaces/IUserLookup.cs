@@ -2,7 +2,5 @@
 
 public interface IUserLookup
 {
-    Task<Dictionary<string, string>> GetUserNamesAsync(
-        IEnumerable<string> userIds,
-        CancellationToken ct);
+    Task<Dictionary<string, string>> GetUserNamesAsync(IEnumerable<string> userIds, CancellationToken ct);
 }
