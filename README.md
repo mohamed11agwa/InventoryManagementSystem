@@ -39,3 +39,4 @@ The API can then be accessed through the configured ASP.NET Core URL.
 | Administrator | admin@inventory.local | Password123! |
 | Warehouse Operator | operator@inventory.local | Password123! |
 | Manager | manager@inventory.local | Password123! |
+| Sales Agent | sales@inventory.local | Password123! |

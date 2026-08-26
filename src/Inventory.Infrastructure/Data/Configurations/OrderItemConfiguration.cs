@@ -8,7 +8,15 @@ public sealed class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
     public void Configure(EntityTypeBuilder<OrderItem> builder)
     {
-        builder.ToTable("OrderItems");
+        builder.ToTable("OrderItems", table =>
+        {
+            table.HasCheckConstraint(
+                "CK_OrderItems_UnitPrice_NonNegative",
+                "[UnitPrice] >= 0");
+            table.HasCheckConstraint(
+                "CK_OrderItems_Quantity_Positive",
+                "[Quantity] > 0");
+        });
         builder.HasKey(x => x.Id);
         builder.Property(x => x.ProductId).IsRequired();
         builder.Property(x => x.WarehouseId).IsRequired();

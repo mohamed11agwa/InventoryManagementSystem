@@ -65,7 +65,8 @@ public sealed class CreateOrderCommandHandler(
                 product.UnitPrice,
                 request.Quantity);
 
-            if (itemResult.IsError) return itemResult.Errors;
+            if (itemResult.IsError)
+                return itemResult.Errors;
             items.Add(itemResult.Value);
         }
 

@@ -9,4 +9,4 @@ public sealed record CreateOrderItemRequest(Guid ProductId, Guid WarehouseId, in
 public sealed record CreateOrderCommand(
     Guid CustomerId,
     IReadOnlyList<CreateOrderItemRequest> Items,
-    string IdempotencyKey) : IRequest<Result<OrderDto>>;
+    string? IdempotencyKey) : IRequest<Result<OrderDto>>;

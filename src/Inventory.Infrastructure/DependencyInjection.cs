@@ -73,6 +73,7 @@ public static class DependencyInjection
         services.AddAuthorizationBuilder()
              .AddPolicy("AdministratorOnly", policy => policy.RequireRole(nameof(Role.Administrator)))
             .AddPolicy("WarehouseOperatorOnly", policy => policy.RequireRole(nameof(Role.WarehouseOperator)))
+            .AddPolicy("InventoryRead", policy => policy.RequireRole(nameof(Role.Administrator),nameof(Role.WarehouseOperator),nameof(Role.Manager)))
             .AddPolicy("ManagerOnly", policy => policy.RequireRole(nameof(Role.Manager)))
             .AddPolicy("SalesOrderManagement", policy => policy.RequireRole(nameof(Role.SalesAgent), nameof(Role.Administrator)))
             .AddPolicy("WarehouseOrderProcessing", policy => policy.RequireRole(nameof(Role.WarehouseOperator), nameof(Role.Administrator)))

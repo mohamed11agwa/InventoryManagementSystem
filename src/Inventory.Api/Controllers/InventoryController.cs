@@ -14,14 +14,17 @@ namespace Inventory.Api.Controllers;
 public sealed class InventoryController(ISender sender) : ApiController
 {
     [HttpGet("products/{productId:guid}")]
+    [Authorize(Policy = "InventoryRead")]
     public async Task<IActionResult> GetProductStock(Guid productId, [FromQuery] GetProductStockQuery query, CancellationToken ct)
         => (await sender.Send(query with { ProductId = productId }, ct)).Match(Ok, Problem);
 
     [HttpGet("warehouses/{warehouseId:guid}")]
+    [Authorize(Policy = "InventoryRead")]
     public async Task<IActionResult> GetWarehouseStock(Guid warehouseId, [FromQuery] GetWarehouseStockQuery query, CancellationToken ct)
         => (await sender.Send(query with { WarehouseId = warehouseId }, ct)).Match(Ok, Problem);
 
     [HttpGet("changes/recent")]
+    [Authorize(Policy = "InventoryRead")]
     public async Task<IActionResult> GetRecentChanges([FromQuery] int count = 20, CancellationToken ct = default)
         => (await sender.Send(new GetRecentStockChangesQuery(count), ct)).Match(Ok, Problem);
 
