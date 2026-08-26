@@ -71,9 +71,13 @@ public static class DependencyInjection
         });
 
         services.AddAuthorizationBuilder()
-            .AddPolicy("AdministratorOnly", policy => policy.RequireRole(nameof(Role.Administrator)))
+             .AddPolicy("AdministratorOnly", policy => policy.RequireRole(nameof(Role.Administrator)))
             .AddPolicy("WarehouseOperatorOnly", policy => policy.RequireRole(nameof(Role.WarehouseOperator)))
-            .AddPolicy("ManagerOnly", policy => policy.RequireRole(nameof(Role.Manager)));
+            .AddPolicy("ManagerOnly", policy => policy.RequireRole(nameof(Role.Manager)))
+            .AddPolicy("SalesOrderManagement", policy => policy.RequireRole(nameof(Role.SalesAgent), nameof(Role.Administrator)))
+            .AddPolicy("WarehouseOrderProcessing", policy => policy.RequireRole(nameof(Role.WarehouseOperator), nameof(Role.Administrator)))
+            .AddPolicy("OrderCancellation", policy => policy.RequireRole(nameof(Role.SalesAgent), nameof(Role.WarehouseOperator), nameof(Role.Administrator)))
+            .AddPolicy("OrderRead", policy => policy.RequireRole(nameof(Role.SalesAgent), nameof(Role.WarehouseOperator), nameof(Role.Manager), nameof(Role.Administrator)));
 
         return services;
     }

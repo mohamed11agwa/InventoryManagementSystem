@@ -56,7 +56,7 @@ public sealed class GetRecentStockChangesQueryHandler(IAppDbContext context, IUs
             .Select(x => x.Adjustment.ToDto(
                 x.Product.Name,
                 x.Warehouse.Name,
-                userNames[x.Adjustment.AdjustedBy]))
+                userNames.GetValueOrDefault(x.Adjustment.AdjustedBy, x.Adjustment.AdjustedBy)))
             .ToList();
 
         return result;

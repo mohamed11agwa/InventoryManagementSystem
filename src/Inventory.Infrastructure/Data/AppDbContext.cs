@@ -1,24 +1,33 @@
 using Inventory.Application.Common.Interfaces;
 using Inventory.Domain.Categories;
 using Inventory.Domain.Common;
+using Inventory.Domain.Customers;
 using Inventory.Domain.Inventory;
+using Inventory.Domain.Orders;
 using Inventory.Domain.Products;
 using Inventory.Domain.Warehouses;
+using Inventory.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Inventory.Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Inventory.Infrastructure.Data;
 
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IMediator mediator)
     : IdentityDbContext<AppUser>(options), IAppDbContext
 {
+    public DbSet<Customer> Customers => Set<Customer>();
+
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
     public DbSet<Warehouse> Warehouses => Set<Warehouse>();
     public DbSet<Inventory.Domain.Inventory.Inventory> Inventories => Set<Inventory.Domain.Inventory.Inventory>();
     public DbSet<StockAdjustment> StockAdjustments => Set<StockAdjustment>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<OrderStatusHistory> OrderStatusHistories => Set<OrderStatusHistory>();
+    public DatabaseFacade Database => base.Database;
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

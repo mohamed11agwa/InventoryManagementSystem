@@ -14,12 +14,12 @@ namespace Inventory.Api.Controllers;
 public sealed class InventoryController(ISender sender) : ApiController
 {
     [HttpGet("products/{productId:guid}")]
-    public async Task<IActionResult> GetProductStock(Guid productId, CancellationToken ct)
-        => (await sender.Send(new GetProductStockQuery(productId), ct)).Match(Ok, Problem);
+    public async Task<IActionResult> GetProductStock(Guid productId, [FromQuery] GetProductStockQuery query, CancellationToken ct)
+        => (await sender.Send(query with { ProductId = productId }, ct)).Match(Ok, Problem);
 
     [HttpGet("warehouses/{warehouseId:guid}")]
-    public async Task<IActionResult> GetWarehouseStock(Guid warehouseId, CancellationToken ct)
-        => (await sender.Send(new GetWarehouseStockQuery(warehouseId), ct)).Match(Ok, Problem);
+    public async Task<IActionResult> GetWarehouseStock(Guid warehouseId, [FromQuery] GetWarehouseStockQuery query, CancellationToken ct)
+        => (await sender.Send(query with { WarehouseId = warehouseId }, ct)).Match(Ok, Problem);
 
     [HttpGet("changes/recent")]
     public async Task<IActionResult> GetRecentChanges([FromQuery] int count = 20, CancellationToken ct = default)
@@ -28,7 +28,7 @@ public sealed class InventoryController(ISender sender) : ApiController
     [HttpPost("warehouses")]
     [Authorize(Policy = "AdministratorOnly")]
     public async Task<IActionResult> AddProductToWarehouse(AddProductToWarehouseCommand command, CancellationToken ct)
-        => (await sender.Send(command, ct)).Match(response => Ok(response), Problem);
+        => (await sender.Send(command, ct)).Match(Ok, Problem);
 
     [HttpPost("adjustments")]
     [Authorize(Policy = "WarehouseOperatorOnly")]

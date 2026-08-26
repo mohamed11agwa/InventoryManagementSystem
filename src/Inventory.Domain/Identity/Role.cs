@@ -4,5 +4,6 @@ public enum Role
 {
     Administrator,
     WarehouseOperator,
-    Manager
+    Manager,
+    SalesAgent
 }

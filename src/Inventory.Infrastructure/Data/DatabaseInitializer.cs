@@ -34,6 +34,7 @@ public sealed class DatabaseInitializer(
             await EnsureRolesAsync(ct);
             await EnsureUserAsync("admin@inventory.local", "Password123!", Role.Administrator, ct);
             await EnsureUserAsync("operator@inventory.local", "Password123!", Role.WarehouseOperator, ct);
+            await EnsureUserAsync("sales@inventory.local", "Password123!", Role.SalesAgent, ct);
             await EnsureUserAsync("manager@inventory.local", "Password123!", Role.Manager, ct);
         }
         catch (Exception ex)

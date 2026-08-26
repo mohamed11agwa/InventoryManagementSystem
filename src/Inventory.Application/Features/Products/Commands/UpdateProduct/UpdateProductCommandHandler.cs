@@ -13,21 +13,13 @@ public sealed class UpdateProductCommandHandler(IAppDbContext context)
     public async Task<Result<ProductDto>> Handle(UpdateProductCommand command, CancellationToken ct)
     {
         var product = await context.Products.FirstOrDefaultAsync(x => x.Id == command.Id, ct);
-        if (product is null)
-        {
-            return Error.NotFound("Product.NotFound", "Product was not found.");
-        }
+        if (product is null) return Error.NotFound("Product.NotFound", "Product was not found.");
 
         if (command.CategoryId is not null && !await context.Categories.AnyAsync(x => x.Id == command.CategoryId, ct))
-        {
             return Error.NotFound("Category.NotFound", "Category was not found.");
-        }
 
-        var result = product.Update(command.Name, command.CategoryId);
-        if (result.IsError)
-        {
-            return result.Errors;
-        }
+        var result = product.Update(command.Name, command.UnitPrice, command.CategoryId);
+        if (result.IsError) return result.Errors;
 
         await context.SaveChangesAsync(ct);
         return product.ToDto();
