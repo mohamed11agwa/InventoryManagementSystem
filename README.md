@@ -1,36 +1,117 @@
 # Fulfillment & Inventory Management Platform
 
-An ASP.NET Core API for managing products, categories, warehouses, inventory, and stock adjustments.
+A production-oriented ASP.NET Core Web API for managing products, categories, warehouses, inventory, and customer orders.
 
-Built with Clean Architecture, CQRS/MediatR, Entity Framework Core, and ASP.NET Core Identity.
+The platform provides a centralized operational system for maintaining product data, tracking stock across multiple warehouses, processing customer orders, enforcing role-based access control, and preserving important business history.
 
--------------------------------------------------
+The solution is designed with a focus on **business rule enforcement, data consistency, traceability, maintainability, and safe concurrent operations**.
 
-Running the Project
+---
 
-Prerequisites
-.NET SDK
-SQL Server
-Visual Studio or another compatible .NET IDE
+## Overview
 
-Clone
-git clone <repository-url>
-cd InventoryManagementSystem
+The Fulfillment & Inventory Management Platform was built to replace disconnected inventory and order-processing workflows with a centralized API.
 
-Configure the Database
+The system supports the operational lifecycle from maintaining products and warehouses to managing inventory and processing customer orders.
 
-Update the connection string in:
-Inventory.Api/appsettings.json
+### Core Capabilities
 
-or the appropriate environment-specific configuration.
+- Product and category management
+- Warehouse management
+- Multi-warehouse inventory tracking
+- Stock adjustments with historical traceability
+- Customer management
+- Customer order creation and processing
+- Order lifecycle management
+- Order cancellation
+- Stock consumption and restoration
+- Concurrent inventory protection
+- Idempotent order creation
+- Order status history
+- Role-based authorization
+- JWT authentication
+- Auditing
+- Centralized error handling
+- Pagination and query filtering
+- Automated validation
+- Domain events
+- Database migrations
 
-Apply Migrations
-dotnet ef database update
+---
 
-Run
-dotnet run
+## Business Context
 
-The API can then be accessed through the configured ASP.NET Core URL.
+The company sells physical products and stores inventory across multiple warehouses.
+
+Previously, product information, warehouse stock, and order processing were handled through disconnected tools and manual checks, creating problems such as:
+
+- Inaccurate inventory information
+- Duplicate work
+- Unclear responsibility
+- Invalid inventory operations
+- Difficulty tracing stock changes
+- Risk of inconsistent order processing
+
+This platform provides a single internal system for maintaining products, warehouses, inventory, and customer orders.
+
+---
+
+## Users & Responsibilities
+
+The system defines four primary roles:
+
+| Role | Responsibilities |
+|---|---|
+| **Administrator** | Manage users, access, products, categories, warehouses, and system-level operations |
+| **Sales Agent** | Create and manage customer orders |
+| **Warehouse Operator** | Perform stock-related and order-fulfillment operations |
+| **Manager** | Review products, inventory, orders, activity, and operational information |
+
+Authorization is enforced at the API/application level and is not dependent on simply hiding functionality from the user interface.
+
+---
+
+# Architecture
+
+The solution follows **Clean Architecture** principles with clear separation between business rules, application use cases, infrastructure concerns, and API delivery.
+
+```text
+InventoryManagementSystem
+│
+├── src
+│   │
+│   ├── Inventory.Domain
+│   │   ├── Categories
+│   │   ├── Customers
+│   │   ├── Identity
+│   │   ├── Inventory
+│   │   ├── Orders
+│   │   ├── Products
+│   │   ├── Warehouses
+│   │   └── Common
+│   │
+│   ├── Inventory.Application
+│   │   ├── Common
+│   │   └── Features
+│   │       ├── Categories
+│   │       ├── Customers
+│   │       ├── Identity
+│   │       ├── Inventory
+│   │       ├── Orders
+│   │       ├── Products
+│   │       └── Warehouses
+│   │
+│   ├── Inventory.Infrastructure
+│   │   ├── Data
+│   │   ├── Identity
+│   │   └── Migrations
+│   │
+│   └── Inventory.Api
+│       ├── Controllers
+│       ├── Extensions
+│       └── Program.cs
+│
+└── InventoryManagementSystem.slnx
 
 ## Test Users
 
