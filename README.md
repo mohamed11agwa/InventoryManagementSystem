@@ -9,14 +9,14 @@ The solution is designed with a focus on **business rule enforcement, data consi
 ---
 ## key Highlights
 
-Implemented JWT authentication and role-based authorization for Administrator, Manager, Sales Agent, and Warehouse Operator.
-Developed product, category, customer, warehouse, inventory, and order management workflows with full CRUD and lifecycle operations.
-Implemented multi-warehouse inventory tracking with stock adjustments and detailed historical stock traceability.
-Built transactional order processing with stock consumption/restoration, order status history, and business-rule-driven state transitions.
-Implemented idempotent order creation with unique idempotency keys and race-condition handling to prevent duplicate orders.
-Added optimistic concurrency protection using SQL Server row-versioning and transactional processing for critical inventory/order operations.
-Applied CQRS with MediatR, FluentValidation, DTOs, mapping, and pipeline validation behaviors.
-Implemented domain events, centralized result/error handling, global exception handling, and auditing.
+- Implemented JWT authentication and role-based authorization for Administrator, Manager, Sales Agent, and Warehouse Operator.
+- Developed product, category, customer, warehouse, inventory, and order management workflows with full CRUD and lifecycle operations.
+- Implemented multi-warehouse inventory tracking with stock adjustments and detailed historical stock traceability.
+- Built transactional order processing with stock consumption/restoration, order status history, and business-rule-driven state transitions.
+- Implemented idempotent order creation with unique idempotency keys and race-condition handling to prevent duplicate orders.
+- Added optimistic concurrency protection using SQL Server row-versioning and transactional processing for critical inventory/order operations.
+- Applied CQRS with MediatR, FluentValidation, DTOs, mapping, and pipeline validation behaviors.
+- Implemented domain events, centralized result/error handling, global exception handling, and auditing.
 
 ---
 
