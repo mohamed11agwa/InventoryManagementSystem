@@ -5,7 +5,17 @@ A production-oriented ASP.NET Core Web API for managing products, categories, wa
 The platform provides a centralized operational system for maintaining product data, tracking stock across multiple warehouses, processing customer orders, enforcing role-based access control, and preserving important business history.
 
 The solution is designed with a focus on **business rule enforcement, data consistency, traceability, maintainability, and safe concurrent operations**.
+---
+## key Highlights
 
+• Implemented JWT authentication and role-based authorization for Administrator, Manager, Sales Agent, and Warehouse Operator
+• Developed product, category, customer, warehouse, inventory, and order management workflows with full CRUD and lifecycle operations
+• Implemented multi-warehouse inventory tracking with stock adjustments and detailed historical stock traceability
+• Built transactional order processing with stock consumption/restoration, order status history, and business-rule-driven state transitions
+• Implemented idempotent order creation with unique idempotency keys and race-condition handling to prevent duplicate orders
+• Added optimistic concurrency protection using SQL Server row-versioning and transactional processing for critical inventory/order operations
+• Applied CQRS with MediatR, FluentValidation, DTOs, mapping, and pipeline validation behaviors
+• Implemented domain events, centralized result/error handling, global exception handling, and auditing
 ---
 
 ## Overview
@@ -70,7 +80,16 @@ The system defines four primary roles:
 Authorization is enforced at the API/application level and is not dependent on simply hiding functionality from the user interface.
 
 ---
+## Test Users
 
+| Role | Email | Password |
+|---|---|---|
+| Administrator | admin@inventory.local | Password123! |
+| Warehouse Operator | operator@inventory.local | Password123! |
+| Manager | manager@inventory.local | Password123! |
+| Sales Agent | sales@inventory.local | Password123! |
+
+---
 # Architecture
 
 The solution follows **Clean Architecture** principles with clear separation between business rules, application use cases, infrastructure concerns, and API delivery.
@@ -113,11 +132,3 @@ InventoryManagementSystem
 │
 └── InventoryManagementSystem.slnx
 
-## Test Users
-
-| Role | Email | Password |
-|---|---|---|
-| Administrator | admin@inventory.local | Password123! |
-| Warehouse Operator | operator@inventory.local | Password123! |
-| Manager | manager@inventory.local | Password123! |
-| Sales Agent | sales@inventory.local | Password123! |
